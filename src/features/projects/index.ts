@@ -6,4 +6,4 @@ export {
 export { ProjectArticle } from "./components/project-article";
 export { ProjectCard } from "./components/project-card";
 export { ProjectList } from "./components/project-list";
-export type { Project } from "./types/project";
+export type { Project, ProjectSummary } from "./types/project";

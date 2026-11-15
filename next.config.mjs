@@ -7,22 +7,22 @@ const nextConfig = {
 		// to the individual modules that are actually used.
 		optimizePackageImports: ["radix-ui"],
 	},
-	// Outstatic reads its markdown content from the filesystem, so the content
+	// Keystatic reads its markdown content from the filesystem, so the content
 	// directory has to be traced into the standalone build of every route that
 	// queries it.
 	outputFileTracingIncludes: {
-		"/": ["./outstatic/**/*"],
-		"/blog/[slug]": ["./outstatic/**/*"],
-		"/projects/[slug]": ["./outstatic/**/*"],
-		"/sitemap.xml": ["./outstatic/**/*"],
+		"/": ["./content/**/*"],
+		"/blog/[slug]": ["./content/**/*"],
+		"/projects/[slug]": ["./content/**/*"],
+		"/sitemap.xml": ["./content/**/*"],
 		// The social cards read the Golos Text files from disk at render time.
 		"/opengraph-image": ["./src/assets/fonts/**/*"],
 		"/blog/[slug]/opengraph-image": [
-			"./outstatic/**/*",
+			"./content/**/*",
 			"./src/assets/fonts/**/*",
 		],
 		"/projects/[slug]/opengraph-image": [
-			"./outstatic/**/*",
+			"./content/**/*",
 			"./src/assets/fonts/**/*",
 		],
 	},

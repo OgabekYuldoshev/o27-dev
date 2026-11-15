@@ -16,8 +16,8 @@ type ProjectPageProps = {
 	params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-	return getProjectSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+	return (await getProjectSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({

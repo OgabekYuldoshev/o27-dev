@@ -13,8 +13,8 @@ type BlogPostPageProps = {
 	params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
-	return getPostSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+	return (await getPostSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({

@@ -1,11 +1,11 @@
-import type { Post } from "@/features/blog";
+import type { PostSummary } from "@/features/blog";
 import { PostList } from "@/features/blog";
 
 import { SectionHeading } from "./section-heading";
 import { ViewAllLink } from "./view-all-link";
 
 type PostsSectionProps = {
-	posts: Post[];
+	posts: PostSummary[];
 };
 
 export function PostsSection({ posts }: PostsSectionProps) {

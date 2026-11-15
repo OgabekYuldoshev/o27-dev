@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { Card, CardDescription, CardTitle } from "@/shared/ui/card";
 
-import type { Project } from "../types/project";
+import type { ProjectSummary } from "../types/project";
 
 // The preview is 128px wide on phones and 224px from the `sm` breakpoint up;
 // `sizes` lets next/image pick a source dense enough for both, while
@@ -13,7 +13,7 @@ const PREVIEW_HEIGHT = 252;
 const PREVIEW_SIZES = "(min-width: 640px) 224px, 128px";
 
 type ProjectCardProps = {
-	project: Project;
+	project: ProjectSummary;
 };
 
 export function ProjectCard({ project }: ProjectCardProps) {
