@@ -1,11 +1,11 @@
-import type { Project } from "@/features/projects";
+import type { ProjectSummary } from "@/features/projects";
 import { ProjectList } from "@/features/projects";
 
 import { SectionHeading } from "./section-heading";
 import { ViewAllLink } from "./view-all-link";
 
 type ProjectsSectionProps = {
-	projects: Project[];
+	projects: ProjectSummary[];
 };
 
 export function ProjectsSection({ projects }: ProjectsSectionProps) {

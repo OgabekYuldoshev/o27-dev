@@ -1,44 +1,45 @@
-import { getDocumentSlugs, load } from "outstatic/server";
+import { contentReader } from "@/shared/lib/content-reader";
+import { toIsoDateTime } from "@/shared/utils/to-iso-date-time";
 
-import type { Post } from "../types/post";
+import type { Post, PostSummary } from "../types/post";
 
-const POSTS_COLLECTION = "posts";
-
-const POST_SUMMARY_FIELDS = ["title", "description", "slug", "publishedAt"];
-
-const POST_DETAIL_FIELDS = [
-	"title",
-	"description",
-	"publishedAt",
-	"slug",
-	"content",
-	"coverImage",
-];
+const posts = contentReader.collections.posts;
 
 /** Every published post, newest first. */
-export async function getPosts(): Promise<Post[]> {
-	const db = await load();
+export async function getPosts(): Promise<PostSummary[]> {
+	const entries = await posts.all();
 
-	return db
-		.find<Post>({ collection: POSTS_COLLECTION })
-		.project(POST_SUMMARY_FIELDS)
-		.sort({ publishedAt: -1 })
-		.toArray();
+	return entries
+		.filter(({ entry }) => entry.status === "published")
+		.map(({ slug, entry }) => ({
+			slug,
+			title: entry.title,
+			description: entry.description,
+			publishedAt: toIsoDateTime(entry.publishedAt),
+		}))
+		.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 }
 
-/** A single post including its MDX content, or `null` when the slug is unknown. */
+/** A single published post including its MDX content, or `null` when there is none. */
 export async function getPostBySlug(slug: string): Promise<Post | null> {
-	const db = await load();
+	const entry = await posts.read(slug);
 
-	const post = await db
-		.find<Post>({ collection: POSTS_COLLECTION, slug })
-		.project(POST_DETAIL_FIELDS)
-		.first();
+	if (!entry || entry.status !== "published") {
+		return null;
+	}
 
-	return post ?? null;
+	return {
+		slug,
+		title: entry.title,
+		description: entry.description,
+		publishedAt: toIsoDateTime(entry.publishedAt),
+		content: await entry.content(),
+	};
 }
 
-/** Slugs of every post, used to pre-render the post routes. */
-export function getPostSlugs(): string[] {
-	return getDocumentSlugs(POSTS_COLLECTION);
+/** Slugs of every published post, used to pre-render the post routes. */
+export async function getPostSlugs(): Promise<string[]> {
+	const entries = await getPosts();
+
+	return entries.map((post) => post.slug);
 }

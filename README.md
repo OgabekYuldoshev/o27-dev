@@ -1,6 +1,6 @@
 # yuldashoff.uz
 
-Personal site and blog of Ogabek Yuldoshev — Next.js App Router, Outstatic as the
+Personal site and blog of Ogabek Yuldoshev — Next.js App Router, Keystatic as the
 Git-backed CMS, Tailwind CSS v4 with shadcn/ui, and Biome for linting and
 formatting.
 
@@ -34,7 +34,7 @@ src/
 │   │   ├── projects/        # index + [slug]/ (own article layout)
 │   │   ├── layout.tsx
 │   │   └── page.tsx
-│   ├── (cms)/               # Outstatic dashboard
+│   ├── (cms)/               # Keystatic dashboard
 │   ├── api/                 # Route handlers
 │   ├── layout.tsx           # Root layout (html/body, fonts, metadata)
 │   ├── not-found.tsx
@@ -54,8 +54,17 @@ src/
 └── styles/                  # Global stylesheet
 ```
 
-Content lives outside `src/`, in `outstatic/content/`, and is managed through the
-Outstatic dashboard at `/outstatic`.
+Content lives outside `src/`, in `content/{posts,projects}/*.mdx`, with images in
+`public/images/{posts,projects}/<slug>/`. It is managed through the Keystatic
+dashboard at `/keystatic` (schema: `src/config/keystatic-config.ts`).
+
+- **Development:** `bun run dev`, open `/keystatic`; edits are written straight to
+  the working tree.
+- **Production:** the dashboard commits to GitHub through a GitHub App. Set
+  `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`,
+  `KEYSTATIC_SECRET` and `NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`. Without them
+  `/api/keystatic` returns 404 and the site still builds.
+- Entries with `status: draft` are never rendered.
 
 ### Rules of thumb
 

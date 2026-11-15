@@ -2,10 +2,10 @@ import Link from "next/link";
 
 import { formatDate } from "@/shared/utils/format-date";
 
-import type { Post } from "../types/post";
+import type { PostSummary } from "../types/post";
 
 type PostListProps = {
-	posts: Post[];
+	posts: PostSummary[];
 };
 
 export function PostList({ posts }: PostListProps) {

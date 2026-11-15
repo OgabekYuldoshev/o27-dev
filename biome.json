@@ -7,12 +7,7 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"ignore": [
-			"node_modules/**/*",
-			".next/**/*",
-			"public/**/*",
-			"outstatic/**/*"
-		]
+		"ignore": ["node_modules/**/*", ".next/**/*", "public/**/*", "content/**/*"]
 	},
 	"formatter": {
 		"enabled": true,

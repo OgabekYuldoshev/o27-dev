@@ -1,9 +1,9 @@
 import { ProjectCard } from "./project-card";
 
-import type { Project } from "../types/project";
+import type { ProjectSummary } from "../types/project";
 
 type ProjectListProps = {
-	projects: Project[];
+	projects: ProjectSummary[];
 };
 
 export function ProjectList({ projects }: ProjectListProps) {

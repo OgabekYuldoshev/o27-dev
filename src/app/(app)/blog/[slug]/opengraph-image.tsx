@@ -11,8 +11,8 @@ export const alt = "Blog post";
 export const size = OG_IMAGE_SIZE;
 export const contentType = OG_IMAGE_CONTENT_TYPE;
 
-export function generateStaticParams() {
-	return getPostSlugs().map((slug) => ({ slug }));
+export async function generateStaticParams() {
+	return (await getPostSlugs()).map((slug) => ({ slug }));
 }
 
 type OpengraphImageProps = {

@@ -1,52 +1,49 @@
-import { getDocumentSlugs, load } from "outstatic/server";
+import { contentReader } from "@/shared/lib/content-reader";
+import { toIsoDateTime } from "@/shared/utils/to-iso-date-time";
 
-import type { Project } from "../types/project";
+import type { Project, ProjectSummary } from "../types/project";
 
-const PROJECTS_COLLECTION = "projects";
-
-const PROJECT_SUMMARY_FIELDS = [
-	"title",
-	"description",
-	"slug",
-	"publishedAt",
-	"image",
-	"href",
-];
-
-const PROJECT_DETAIL_FIELDS = [
-	"title",
-	"description",
-	"publishedAt",
-	"slug",
-	"content",
-	"image",
-	"href",
-];
+const projects = contentReader.collections.projects;
 
 /** Every published project, newest first. */
-export async function getProjects(): Promise<Project[]> {
-	const db = await load();
+export async function getProjects(): Promise<ProjectSummary[]> {
+	const entries = await projects.all();
 
-	return db
-		.find<Project>({ collection: PROJECTS_COLLECTION })
-		.project(PROJECT_SUMMARY_FIELDS)
-		.sort({ publishedAt: -1 })
-		.toArray();
+	return entries
+		.filter(({ entry }) => entry.status === "published")
+		.map(({ slug, entry }) => ({
+			slug,
+			title: entry.title,
+			description: entry.description,
+			publishedAt: toIsoDateTime(entry.publishedAt),
+			image: entry.image,
+			href: entry.href,
+		}))
+		.sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 }
 
-/** A single project including its MDX content, or `null` when the slug is unknown. */
+/** A single published project including its MDX content, or `null` when there is none. */
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
-	const db = await load();
+	const entry = await projects.read(slug);
 
-	const project = await db
-		.find<Project>({ collection: PROJECTS_COLLECTION, slug })
-		.project(PROJECT_DETAIL_FIELDS)
-		.first();
+	if (!entry || entry.status !== "published") {
+		return null;
+	}
 
-	return project ?? null;
+	return {
+		slug,
+		title: entry.title,
+		description: entry.description,
+		publishedAt: toIsoDateTime(entry.publishedAt),
+		image: entry.image,
+		href: entry.href,
+		content: await entry.content(),
+	};
 }
 
-/** Slugs of every project, used to pre-render the project routes. */
-export function getProjectSlugs(): string[] {
-	return getDocumentSlugs(PROJECTS_COLLECTION);
+/** Slugs of every published project, used to pre-render the project routes. */
+export async function getProjectSlugs(): Promise<string[]> {
+	const entries = await getProjects();
+
+	return entries.map((project) => project.slug);
 }
