@@ -15,16 +15,21 @@ experience:
         Worked on the Electronic Licensing System (license.gov.uz), which
         covers about 200 government license and permit services.
 skills:
-  - category: Languages
+  - category: Programming
     items:
       - TypeScript
       - JavaScript
+      - Java
   - category: Frontend
     items:
       - React
       - Next.js (App Router)
       - Tailwind CSS
       - shadcn/ui
+  - category: Backend
+    items:
+      - Node.js
+      - Spring Boot
   - category: Tooling
     items:
       - Bun
@@ -37,5 +42,15 @@ skills:
       - AI-powered web apps
       - Chrome extensions
       - npm package authoring
-education: []
-languages: []
+education:
+  - institution: Tashkent State University of Economics
+    degree: Finance and Financial Technologies
+    start: '2020'
+    end: '2025'
+languages:
+  - name: Uzbek
+    level: Native
+  - name: Russian
+    level: Conversational
+  - name: English
+    level: Conversational
