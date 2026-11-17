@@ -1,0 +1,26 @@
+---
+title: Have you ever tried writing your own Uppercase utility type in TypeScript?
+status: published
+publishedAt: 2025-07-01T09:51:00.000Z
+description: >-
+  Utility types like Uppercase<T> in TypeScript allow us to perform powerful
+  compile-time transformations on string types.
+---
+Utility types like `Uppercase<T>` in TypeScript allow us to perform powerful compile-time transformations on string types. However, we sometimes gain a much deeper understanding by implementing them from scratch ourselves.
+
+![](/images/posts/have-you-ever-tried-writing-your-own-uppercase-utility-type-in-type-script/1751122482053-QxND.jpg)\
+\
+For instance, the following `Uppercase<T>` implementation converts every character of a string to uppercase, except we are doing this transformation through a manually written character map called `Chars`.\
+\
+💡 **What’s happening here?**
+
+1. If `T` is a string, we split it into two parts: `First` and `Tail`.
+2. We check the `First` character against the `Chars` map — if it exists, we convert it to uppercase.
+3. Next, we recursively transform the remaining part using `Uppercase<Tail>`.
+4. Once we reach the end of the string (`T extends ''`), the recursion terminates with an empty string.
+
+🧠 As a result, we've built a real `Uppercase` transformation using recursive conditional types and distributive string literal pattern matching!
+
+If you also want to understand the type system on a deeper level — try writing small experiments like this yourself 👨‍💻
+
+\#typescript #typelevelprogramming #generics #utilitytypes #codewithme #devtips #softwareengineering
