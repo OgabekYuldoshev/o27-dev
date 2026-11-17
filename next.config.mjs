@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
+	// Self-contained server bundle (`.next/standalone`) for the Docker image.
+	output: "standalone",
 	experimental: {
 		// shadcn/ui imports its primitives from the `radix-ui` umbrella package,
 		// which does not tree-shake on its own; this rewrites those barrel imports
