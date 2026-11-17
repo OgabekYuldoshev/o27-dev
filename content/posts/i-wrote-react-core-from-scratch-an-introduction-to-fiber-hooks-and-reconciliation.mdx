@@ -1,0 +1,133 @@
+---
+title: >-
+  I Wrote React Core From Scratch: An Introduction to Fiber, Hooks, and
+  Reconciliation
+status: published
+publishedAt: 2025-07-06T08:33:00.000Z
+description: >-
+  Have you ever wondered how React actually works under the hood? Not just in
+  theory, but down to every single line of code?
+---
+Have you ever wondered how React actually works under the hood? Not just in theory, but down to every single line of code?
+
+Like many developers, I’ve been using React for years. I know how to build components, manage state, and optimize performance using `useMemo` or `useCallback`. But when someone asks *“How does React actually update the DOM so efficiently?”* or *“How do hooks remember their state between renders?”*, relying on abstract explanations like *"it uses a Virtual DOM"* stops being enough.
+
+To truly understand it, I decided to build a mini-version of React from scratch — implementing **JSX parsing, React Fiber architecture, Reconciliation, and core Hooks (`useState`, `useEffect`)** ourselves.
+
+In this article, I want to break down what I learned, how React’s internal engine works, and how you can write your own lightweight React core.
+
+## Why build React from scratch?
+
+Modern frontend frameworks abstract away an immense amount of complexity. While this makes us productive, it also turns the core engine into a "black box." When bugs happen, or performance drops, we often debug by guessing rather than knowing the exact mechanics.
+
+Writing a simplified React engine forces you to confront the real architectural challenges:
+
+1. **How do you break down rendering so it doesn't block the main thread?** (Fiber Architecture)
+2. **How do you compare old and new UI states efficiently?** (Reconciliation)
+3. **Where and how do hooks persist state across re-renders?** (Hooks implementation)
+
+## 1. The Heart of the Engine: React Fiber
+
+In older versions of React, the rendering process was synchronous and recursive. Once React started updating a component tree, it couldn't stop until it reached the bottom. For large apps, this blocked the main thread, causing dropped frames and laggy UI.
+
+React 16 introduced **Fiber** to solve this. A Fiber is essentially a JavaScript object representing a unit of work. Instead of a strict recursive tree traversal, React uses a linked list of Fiber nodes.
+
+Each Fiber node contains:
+
+* `type`: The component or HTML tag (e.g., `div`, `App`).
+* `props`: Properties passed to the element.
+* `stateNode`: Reference to the actual DOM element.
+* Pointers: `child`, `sibling`, and `return` (parent).
+
+By breaking the UI tree into individual Fiber units, React gains the ability to **pause, resume, and prioritize work**.
+
+## 2. Reconciliation & The Work Loop
+
+Reconciliation is the process of figuring out what changed in the UI and updating the DOM minimally and efficiently.
+
+In our mini-React, the core rendering engine revolves around a **Work Loop**:
+
+JavaScript
+
+```
+let nextUnitOfWork = null;
+let wipRoot = null;
+
+function workLoop(deadline) {
+  let shouldYield = false;
+  while (nextUnitOfWork && !shouldYield) {
+    nextUnitOfWork = performUnitOfWork(nextUnitOfWork);
+    shouldYield = deadline.timeRemaining() < 1;
+  }
+  
+  if (!wipRoot && nextUnitOfWork) {
+    commitRoot();
+  }
+  
+  requestIdleCallback(workLoop);
+}
+
+requestIdleCallback(workLoop);
+
+```
+
+### How `performUnitOfWork` works:
+
+1. **Create DOM node** (if it doesn't exist yet).
+2. **Reconcile children** — compare old fibers with new JSX elements (the `diffing` process).
+3. **Return the next unit of work** (prioritizing `child`, then `sibling`, then bubbling up via `return`).
+
+## 3. Implementing Hooks (`useState` and `useEffect`)
+
+One of the most mind-bending parts to recreate is how hooks work. How does `useState` know which state belongs to which component call, especially since components are just functions running over and over again?
+
+The secret is that **hooks are stored as a linked list inside the Fiber node itself**.
+
+Here is a simplified mental model of how state is tracked:
+
+JavaScript
+
+```
+let wipFiber = null;
+let hookIndex = null;
+
+function useState(initial) {
+  const oldHook = wipFiber.alternate?.hooks?.[hookIndex];
+  
+  const hook = {
+    state: oldHook ? oldHook.state : initial,
+    queue: [],
+  };
+
+  // Process all queued actions/updates
+  const actions = oldHook ? oldHook.queue : [];
+  actions.forEach(action => {
+    hook.state = action(hook.state);
+  });
+
+  const setState = action => {
+    hook.queue.push(action);
+    // Trigger a re-render from the root
+    wipRoot = {
+      dom: currentRoot.dom,
+      props: currentRoot.props,
+      alternate: currentRoot,
+    };
+    nextUnitOfWork = wipRoot;
+    deletions = [];
+  };
+
+  wipFiber.hooks.push(hook);
+  hookIndex++;
+  return [hook.state, setState];
+}
+
+```
+
+Because hooks rely strictly on the **call order** during render, maintaining an array/linked list index inside the Fiber node ensures state persists accurately across re-renders.
+
+## Conclusion
+
+Writing a React core from scratch completely changes how you look at everyday web development. You stop seeing frameworks as magic and start seeing them as clever engineering solutions to state management, scheduling, and DOM optimization problems.
+
+If you want to dive deeper into frontend architecture, I highly recommend trying to build a tiny reconciler yourself. It’s challenging, deeply satisfying, and will make you a significantly better React developer.
