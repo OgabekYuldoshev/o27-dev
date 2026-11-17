@@ -1,3 +1,12 @@
+// pdfkit (under @react-pdf/renderer) loads its standard fonts and platform
+// shims through `#standard-fonts/*`-style subpath imports, which the
+// standalone file tracer does not follow. Every route that imports the resume
+// feature has to ship those files explicitly or it throws MODULE_NOT_FOUND.
+const PDFKIT_RUNTIME_FILES = [
+	"./node_modules/pdfkit/js/standard-fonts/**/*",
+	"./node_modules/pdfkit/lib/**/*",
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
@@ -16,12 +25,16 @@ const nextConfig = {
 	// directory has to be traced into the standalone build of every route that
 	// queries it.
 	outputFileTracingIncludes: {
-		"/": ["./content/**/*"],
+		"/": ["./content/**/*", ...PDFKIT_RUNTIME_FILES],
 		"/blog/[slug]": ["./content/**/*"],
 		"/projects/[slug]": ["./content/**/*"],
-		"/sitemap.xml": ["./content/**/*"],
+		"/sitemap.xml": ["./content/**/*", ...PDFKIT_RUNTIME_FILES],
 		// The resume reads the singleton and the Golos Text files from disk.
-		"/resume.pdf": ["./content/**/*", "./src/assets/fonts/**/*"],
+		"/resume.pdf": [
+			"./content/**/*",
+			"./src/assets/fonts/**/*",
+			...PDFKIT_RUNTIME_FILES,
+		],
 		// The social cards read the Golos Text files from disk at render time.
 		"/opengraph-image": ["./src/assets/fonts/**/*"],
 		"/blog/[slug]/opengraph-image": [
