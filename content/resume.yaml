@@ -4,7 +4,38 @@ summary: >-
   Full-stack developer specializing in building AI-powered web applications.
   Focused on clean code and intuitive user experiences, turning complex
   problems into elegant, technically robust solutions.
-experience: []
-skills: []
+experience:
+  - job: ministry-of-justice
+    highlights:
+      - >-
+        Built government web platforms for the Ministry of Justice, including
+        Adliya Mobile (my.adliya.uz), the Business Registration System
+        (birdarcha.uz) and the Intellectual Property System (im.adliya.uz).
+      - >-
+        Worked on the Electronic Licensing System (license.gov.uz), which
+        covers about 200 government license and permit services.
+skills:
+  - category: Languages
+    items:
+      - TypeScript
+      - JavaScript
+  - category: Frontend
+    items:
+      - React
+      - Next.js (App Router)
+      - Tailwind CSS
+      - shadcn/ui
+  - category: Tooling
+    items:
+      - Bun
+      - Biome
+      - Docker
+      - Git
+      - Keystatic CMS
+  - category: Other
+    items:
+      - AI-powered web apps
+      - Chrome extensions
+      - npm package authoring
 education: []
 languages: []
