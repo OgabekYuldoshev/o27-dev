@@ -26,7 +26,11 @@ COPY . .
 # NEXT_PUBLIC_* values are inlined into the client bundle at build time,
 # so they must be passed as build args, not runtime env.
 ARG NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
+# Public origin for the Keystatic GitHub OAuth callback; falls back to
+# SITE_CONFIG.url when empty.
+ARG NEXT_PUBLIC_URL
 ENV NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG=${NEXT_PUBLIC_KEYSTATIC_GITHUB_APP_SLUG} \
+	NEXT_PUBLIC_URL=${NEXT_PUBLIC_URL} \
 	NEXT_TELEMETRY_DISABLED=1 \
 	NODE_ENV=production
 
