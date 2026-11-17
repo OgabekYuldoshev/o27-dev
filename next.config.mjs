@@ -3,6 +3,9 @@ const nextConfig = {
 	reactStrictMode: true,
 	// Self-contained server bundle (`.next/standalone`) for the Docker image.
 	output: "standalone",
+	// react-pdf ships its own layout engine and font loader; bundling it breaks
+	// both, so it is required from node_modules at runtime instead.
+	serverExternalPackages: ["@react-pdf/renderer"],
 	experimental: {
 		// shadcn/ui imports its primitives from the `radix-ui` umbrella package,
 		// which does not tree-shake on its own; this rewrites those barrel imports
@@ -17,6 +20,8 @@ const nextConfig = {
 		"/blog/[slug]": ["./content/**/*"],
 		"/projects/[slug]": ["./content/**/*"],
 		"/sitemap.xml": ["./content/**/*"],
+		// The resume reads the singleton and the Golos Text files from disk.
+		"/resume.pdf": ["./content/**/*", "./src/assets/fonts/**/*"],
 		// The social cards read the Golos Text files from disk at render time.
 		"/opengraph-image": ["./src/assets/fonts/**/*"],
 		"/blog/[slug]/opengraph-image": [

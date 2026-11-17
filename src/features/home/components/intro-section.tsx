@@ -1,4 +1,5 @@
 import { SITE_CONFIG } from "@/config/site-config";
+import { DownloadResumeButton } from "@/features/resume";
 import { Badge } from "@/shared/ui/badge";
 
 export function IntroSection() {
@@ -21,6 +22,7 @@ export function IntroSection() {
 				and user-friendly. I enjoy tackling complex problems and turning them
 				into elegant digital solutions.
 			</p>
+			<DownloadResumeButton className="mt-6 rounded-full" />
 		</div>
 	);
 }

@@ -1,5 +1,6 @@
 import { SITE_CONFIG } from "@/config/site-config";
 import { SOCIAL_LINKS } from "@/config/social-links";
+import { DownloadResumeButton } from "@/features/resume";
 
 import { MagneticSocialLink } from "./magnetic-social-link";
 import { SectionHeading } from "./section-heading";
@@ -23,6 +24,7 @@ export function ConnectSection() {
 						{social.label}
 					</MagneticSocialLink>
 				))}
+				<DownloadResumeButton className="rounded-full" />
 			</div>
 		</>
 	);

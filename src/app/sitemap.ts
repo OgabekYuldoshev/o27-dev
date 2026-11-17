@@ -3,6 +3,7 @@ import type { MetadataRoute } from "next";
 import { SITE_CONFIG } from "@/config/site-config";
 import { getPosts } from "@/features/blog";
 import { getProjects } from "@/features/projects";
+import { RESUME_PATH } from "@/features/resume";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 	const [posts, projects] = await Promise.all([getPosts(), getProjects()]);
@@ -25,6 +26,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			lastModified: new Date(),
 			changeFrequency: "weekly",
 			priority: 0.9,
+		},
+		{
+			url: `${SITE_CONFIG.url}${RESUME_PATH}`,
+			lastModified: new Date(),
+			changeFrequency: "monthly",
+			priority: 0.7,
 		},
 		...posts.map((post) => ({
 			url: `${SITE_CONFIG.url}/blog/${post.slug}`,
